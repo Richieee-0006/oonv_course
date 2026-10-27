@@ -257,5 +257,245 @@ public class Program
         { leftType: 'IKava', rightType: 'MlekoDecorator' }
       ]
     }
+  },
+
+  {
+    id: 'fp-proxy',
+    title: 'Vzor Proxy (Ochranný zástupce databáze)',
+    patternName: 'Proxy',
+    pageReference: 'str. 4 z PDF - Proxy',
+    scenario: 'Napište 4 části vzoru Proxy: 1. Společné rozhraní IDatabaze (NactiTajnaData()); 2. Skutečný objekt SkutecnaDatabaze : IDatabaze; 3. DatabazeProxy : IDatabaze držící SkutecnaDatabaze a kontrolující roli Admin; 4. Main() kde vlevo je IDatabaze a vpravo DatabazeProxy.',
+    part1Hint: '1. Rozhraní: public interface IDatabaze { string NactiTajnaData(); }',
+    part2Hint: '2. Skutečný objekt: public class SkutecnaDatabaze : IDatabaze { ... }',
+    part3Hint: '3. Proxy: public class DatabazeProxy : IDatabaze { private SkutecnaDatabaze? _db; private string _role; ... }',
+    part4Hint: '4. Main: IDatabaze db = new DatabazeProxy("Admin");',
+    starterCode: `using System;
+
+// 1. ČÁST: Společné rozhraní (Subject)
+// TODO: public interface IDatabaze
+
+
+// 2. ČÁST: Skutečný objekt (RealSubject)
+// TODO: public class SkutecnaDatabaze : IDatabaze
+
+
+// 3. ČÁST: Zástupce (Proxy) se stejným rozhraním
+// TODO: public class DatabazeProxy : IDatabaze
+
+
+// 4. ČÁST: Main (vlevo rozhraní, vpravo Proxy)
+public class Program
+{
+    public static void Main()
+    {
+        // TODO: IDatabaze db = new DatabazeProxy("Admin");
+    }
+}`,
+    solutionCode: `using System;
+
+// 1. ČÁST: Společné rozhraní
+public interface IDatabaze
+{
+    string NactiTajnaData();
+}
+
+// 2. ČÁST: Skutečný drahý/citlivý objekt
+public class SkutecnaDatabaze : IDatabaze
+{
+    public string NactiTajnaData() => "Heslo k jadernému kufříku: 1234";
+}
+
+// 3. ČÁST: Proxy (stejné rozhraní + kontrola přístupu + lazy init)
+public class DatabazeProxy : IDatabaze
+{
+    private SkutecnaDatabaze? _skutecnaDb;
+    private readonly string _role;
+
+    public DatabazeProxy(string role) => _role = role;
+
+    public string NactiTajnaData()
+    {
+        if (_role != "Admin")
+            return "[Proxy] PŘÍSTUP ODEPŘEN!";
+
+        _skutecnaDb ??= new SkutecnaDatabaze();
+        return _skutecnaDb.NactiTajnaData();
+    }
+}
+
+// 4. ČÁST: Main (vlevo rozhraní, vpravo konkrétní třída)
+public class Program
+{
+    public static void Main()
+    {
+        IDatabaze db = new DatabazeProxy("Admin");
+        Console.WriteLine(db.NactiTajnaData());
+    }
+}`,
+    validationRules: {
+      expectedInterfaces: ['IDatabaze'],
+      expectedClasses: ['SkutecnaDatabaze', 'DatabazeProxy'],
+      expectedMainAssignments: [
+        { leftType: 'IDatabaze', rightType: 'DatabazeProxy' }
+      ]
+    }
+  },
+
+  {
+    id: 'fp-factory-method',
+    title: 'Vzor Factory Method (Generátor nepřátel)',
+    patternName: 'Factory Method',
+    pageReference: 'str. 9–10 z PDF - Tovární metoda',
+    scenario: 'Napište 4 části Factory Method: 1. Rozhraní produktu INepritel (Zautoc()); 2. Konkrétní produkt Kostlivec : INepritel; 3. Abstraktní tvůrce GeneratorNepratel s abstract VytvorNepritele() a potomka GeneratorProLes; 4. Main() kde vlevo je GeneratorNepratel a vpravo GeneratorProLes.',
+    part1Hint: '1. Rozhraní produktu: public interface INepritel { void Zautoc(); }',
+    part2Hint: '2. Konkrétní produkt: public class Kostlivec : INepritel { public void Zautoc() => ... }',
+    part3Hint: '3. Tvůrce: public abstract class GeneratorNepratel { public abstract INepritel VytvorNepritele(); } + GeneratorProLes',
+    part4Hint: '4. Main: GeneratorNepratel gen = new GeneratorProLes(); INepritel n = gen.VytvorNepritele();',
+    starterCode: `using System;
+
+// 1. ČÁST: Rozhraní produktu
+// TODO: public interface INepritel
+
+
+// 2. ČÁST: Konkrétní produkt
+// TODO: public class Kostlivec : INepritel
+
+
+// 3. ČÁST: Abstraktní tvůrce + konkrétní tvůrce (Factory Method)
+// TODO: public abstract class GeneratorNepratel a public class GeneratorProLes : GeneratorNepratel
+
+
+// 4. ČÁST: Main
+public class Program
+{
+    public static void Main()
+    {
+        // TODO: GeneratorNepratel gen = new GeneratorProLes();
+    }
+}`,
+    solutionCode: `using System;
+
+// 1. ČÁST: Rozhraní produktu
+public interface INepritel
+{
+    void Zautoc();
+}
+
+// 2. ČÁST: Konkrétní produkt
+public class Kostlivec : INepritel
+{
+    public void Zautoc() => Console.WriteLine("Kostlivec útočí šípem!");
+}
+
+// 3. ČÁST: Tvůrce s tovární metodou
+public abstract class GeneratorNepratel
+{
+    public abstract INepritel VytvorNepritele();
+}
+
+public class GeneratorProLes : GeneratorNepratel
+{
+    public override INepritel VytvorNepritele() => new Kostlivec();
+}
+
+// 4. ČÁST: Main (vlevo abstraktní třída/rozhraní, vpravo konkrétní třída)
+public class Program
+{
+    public static void Main()
+    {
+        GeneratorNepratel gen = new GeneratorProLes();
+        INepritel nepritel = gen.VytvorNepritele();
+        nepritel.Zautoc();
+    }
+}`,
+    validationRules: {
+      expectedInterfaces: ['INepritel'],
+      expectedClasses: ['Kostlivec', 'GeneratorNepratel', 'GeneratorProLes'],
+      expectedMainAssignments: [
+        { leftType: 'GeneratorNepratel', rightType: 'GeneratorProLes' }
+      ]
+    }
+  },
+
+  {
+    id: 'fp-observer',
+    title: 'Vzor Observer (Hrdina a Odběratelé)',
+    patternName: 'Observer',
+    pageReference: 'str. 11 & 15 z PDF - Pozorovatel',
+    scenario: 'Napište 4 části vzoru Observer: 1. Rozhraní IObserver (Update(int hp)); 2. Konkrétní odběratel StatistikyObserver : IObserver; 3. Subject Hrdina se seznamem List<IObserver> a metodou ZmenZdravi(int hp); 4. Main() kde přihlásíte IObserver k hrdinovi.',
+    part1Hint: '1. Rozhraní: public interface IObserver { void Update(int hp); }',
+    part2Hint: '2. Konkrétní odběratel: public class StatistikyObserver : IObserver { ... }',
+    part3Hint: '3. Subject: public class Hrdina { private List<IObserver> _odberatele = new(); ... }',
+    part4Hint: '4. Main: IObserver obs = new StatistikyObserver(); hrdina.Prihlas(obs);',
+    starterCode: `using System;
+using System.Collections.Generic;
+
+// 1. ČÁST: Rozhraní odběratele
+// TODO: public interface IObserver
+
+
+// 2. ČÁST: Konkrétní odběratel
+// TODO: public class StatistikyObserver : IObserver
+
+
+// 3. ČÁST: Vydavatel (Subject) držící List<IObserver>
+// TODO: public class Hrdina
+
+
+// 4. ČÁST: Main
+public class Program
+{
+    public static void Main()
+    {
+        // TODO: IObserver obs = new StatistikyObserver();
+    }
+}`,
+    solutionCode: `using System;
+using System.Collections.Generic;
+
+// 1. ČÁST: Rozhraní odběratele
+public interface IObserver
+{
+    void Update(int noveHp);
+}
+
+// 2. ČÁST: Konkrétní odběratel
+public class StatistikyObserver : IObserver
+{
+    public void Update(int noveHp) => Console.WriteLine($"[Statistiky] Nové HP hrdiny: {noveHp}");
+}
+
+// 3. ČÁST: Vydavatel (Subject)
+public class Hrdina
+{
+    private readonly List<IObserver> _odberatele = new List<IObserver>();
+
+    public void Prihlas(IObserver obs) => _odberatele.Add(obs);
+
+    public void ZmenZdravi(int hp)
+    {
+        foreach (var o in _odberatele)
+            o.Update(hp);
+    }
+}
+
+// 4. ČÁST: Main (vlevo rozhraní, vpravo konkrétní třída)
+public class Program
+{
+    public static void Main()
+    {
+        IObserver obs = new StatistikyObserver();
+        Hrdina h = new Hrdina();
+        h.Prihlas(obs);
+        h.ZmenZdravi(75);
+    }
+}`,
+    validationRules: {
+      expectedInterfaces: ['IObserver'],
+      expectedClasses: ['StatistikyObserver', 'Hrdina'],
+      expectedMainAssignments: [
+        { leftType: 'IObserver', rightType: 'StatistikyObserver' }
+      ]
+    }
   }
 ];

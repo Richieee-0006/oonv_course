@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { patternsData } from '../../data/patternsData';
+import { patternCodeGuides } from '../../data/patternCodeGuides';
 import { PatternCategory } from '../../types/patterns';
 import { CodeEditor } from '../editor/CodeEditor';
 import { RunnerOutput } from '../editor/RunnerOutput';
@@ -7,7 +8,7 @@ import { PatternUMLDiagram } from '../diagrams/PatternUMLDiagram';
 import { runnerService } from '../../services/runnerService';
 import { RunnerResult } from '../../types/runner';
 import { storageService } from '../../services/storageService';
-import { Sparkles, Search, CheckCircle2, BookOpen, Layers, Shield, Zap, Network } from 'lucide-react';
+import { Sparkles, Search, CheckCircle2, BookOpen, Layers, Shield, Zap, Network, Code2, HelpCircle, AlertTriangle } from 'lucide-react';
 
 export const PatternCatalog: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<PatternCategory | 'all'>('all');
@@ -26,6 +27,7 @@ export const PatternCatalog: React.FC = () => {
 
   const selectedPattern = patternsData.find(p => p.id === selectedPatternId) || patternsData[0];
   const currentCode = patternCodes[selectedPattern.id] || selectedPattern.csharpCode;
+  const codeGuide = patternCodeGuides[selectedPattern.id];
 
   const filteredPatterns = patternsData.filter(p => {
     const matchesCategory = selectedCategory === 'all' || p.category === selectedCategory;
@@ -78,9 +80,8 @@ export const PatternCatalog: React.FC = () => {
         </h2>
           <div className="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-4xl leading-relaxed space-y-2">
           <p>
-            U zkoušky a zápočtu <strong>nepotřebuješ znát web Refactoring.Guru zpaměti</strong> – stěžejní je
-            <strong> poznat daný návrhový vzor z UML diagramu</strong> (podle šipek <code>- - ▷</code>, <code>───▷</code>, <code>◇───&gt;</code>)
-            a umět ho přepsat do C# kódu.
+            Hlavní důraz u každého vzoru je na <strong>samotný C# kód (anatomii vzoru)</strong> a na pochopení
+            <strong> KDY, JAK a PROČ vzor funguje a kdy je vhodný</strong> (včetně UML diagramu a živého spuštění přes <code>dotnet</code>).
           </p>
         </div>
       </div>
@@ -229,7 +230,7 @@ export const PatternCatalog: React.FC = () => {
           <div className="p-4 rounded-2xl bg-rose-50/50 dark:bg-rose-950/20 border border-rose-200/60 dark:border-rose-900/40">
             <h4 className="font-bold text-rose-900 dark:text-rose-300 text-sm mb-2 flex items-center space-x-1.5">
               <Shield className="w-4 h-4 text-rose-500" />
-              <span>Problém v praxi</span>
+              <span>Proč vzniká problém (Bez vzoru)</span>
             </h4>
             <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
               {selectedPattern.problem}
@@ -240,7 +241,7 @@ export const PatternCatalog: React.FC = () => {
           <div className="p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200/60 dark:border-emerald-900/40">
             <h4 className="font-bold text-emerald-900 dark:text-emerald-300 text-sm mb-2 flex items-center space-x-1.5">
               <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-              <span>Řešení pomocí GoF vzoru</span>
+              <span>Jak a proč to vzor řeší v C#</span>
             </h4>
             <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
               {selectedPattern.solution}
@@ -251,7 +252,7 @@ export const PatternCatalog: React.FC = () => {
           <div className="p-4 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-200/60 dark:border-indigo-900/40">
             <h4 className="font-bold text-indigo-900 dark:text-indigo-300 text-sm mb-2 flex items-center space-x-1.5">
               <Layers className="w-4 h-4 text-indigo-500" />
-              <span>Srovnání s podobnými vzory</span>
+              <span>Srovnání (S čím si ho neplést)</span>
             </h4>
             <div className="space-y-2 text-xs">
               {selectedPattern.similarPatterns.map((sim, i) => (
@@ -264,62 +265,69 @@ export const PatternCatalog: React.FC = () => {
           </div>
         </div>
 
-        {/* UML Description & Architecture Participants */}
-        <div className="p-6 sm:p-8 border-b border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-950/20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* UML Structure */}
-            <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-              <h4 className="font-bold text-slate-900 dark:text-white text-sm mb-2 flex items-center space-x-1.5">
-                <Network className="w-4 h-4 text-indigo-500" />
-                <span>UML diagram vzoru (Klíč ke zkoušce)</span>
-              </h4>
-              <PatternUMLDiagram patternKey={selectedPattern.umlSvgKey} />
-              <div className="mt-2 p-2.5 bg-slate-50 dark:bg-slate-950 rounded-xl font-mono text-[11px] text-indigo-600 dark:text-indigo-300 border border-slate-200/80 dark:border-slate-800 leading-relaxed whitespace-pre-wrap break-words">
-                {selectedPattern.umlDescription}
+        {/* KDY A PROČ JE VZOR VHODNÝ + ANATOMIE C# KÓDU */}
+        {codeGuide && (
+          <div className="p-6 sm:p-8 border-b border-slate-200 dark:border-slate-800 bg-indigo-50/20 dark:bg-indigo-950/10 space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              {/* Left: Kdy a proč vzor použít vs kdy ne */}
+              <div className="lg:col-span-5 space-y-4">
+                <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-emerald-200 dark:border-emerald-900/60 shadow-sm">
+                  <h4 className="font-bold text-emerald-800 dark:text-emerald-300 text-sm mb-2.5 flex items-center space-x-2">
+                    <HelpCircle className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                    <span>Kdy a proč je {selectedPattern.name} vhodný:</span>
+                  </h4>
+                  <ul className="space-y-2 text-xs text-slate-700 dark:text-slate-300 leading-relaxed list-disc pl-4">
+                    {codeGuide.whenToUse.map((item, idx) => (
+                      <li key={idx}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-amber-200 dark:border-amber-900/60 shadow-sm">
+                  <h4 className="font-bold text-amber-800 dark:text-amber-300 text-xs mb-1.5 flex items-center space-x-2">
+                    <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0" />
+                    <span>Kdy vzor naopak NEPOUŽÍVAT:</span>
+                  </h4>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                    {codeGuide.whenNotToUse}
+                  </p>
+                </div>
+              </div>
+
+              {/* Right: Anatomie C# kódu krok za krokem */}
+              <div className="lg:col-span-7 p-5 rounded-2xl bg-white dark:bg-slate-900 border border-indigo-200 dark:border-indigo-900/60 shadow-sm">
+                <h4 className="font-bold text-slate-900 dark:text-white text-sm mb-3 flex items-center space-x-2">
+                  <Code2 className="w-4 h-4 text-indigo-500 flex-shrink-0" />
+                  <span>Anatomie C# kódu: Jak a proč vzor uvnitř funguje (3 klíčové kroky)</span>
+                </h4>
+                <div className="space-y-3">
+                  {codeGuide.codeAnatomy.map((part, idx) => (
+                    <div key={idx} className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800">
+                      <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-1">
+                        {part.step}
+                      </div>
+                      <pre className="p-2 rounded-lg bg-slate-900 text-emerald-300 font-mono text-[11px] overflow-x-auto mb-1.5">
+                        {part.codeLine}
+                      </pre>
+                      <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                        <strong className="text-slate-800 dark:text-slate-200">Proč to funguje:</strong> {part.whyItWorks}
+                      </p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-
-            {/* Architecture Participants */}
-            <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-              <h4 className="font-bold text-slate-900 dark:text-white text-sm mb-2 flex items-center space-x-1.5">
-                <Layers className="w-4 h-4 text-purple-500" />
-                <span>Účastníci (Role tříd v architektuře)</span>
-              </h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
-                Rozdělení odpovědností jednotlivých komponent:
-              </p>
-              <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
-                {selectedPattern.participants.map((p, idx) => (
-                  <div key={idx} className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/70 dark:border-slate-800/70">
-                    <div className="font-mono font-bold text-indigo-600 dark:text-indigo-400 text-xs">
-                      {p.name}
-                    </div>
-                    <div className="text-slate-600 dark:text-slate-300 text-xs mt-0.5 leading-relaxed">
-                      {p.role}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Python vs C# Note if available */}
-        {selectedPattern.pythonComparisonNote && (
-          <div className="px-6 py-3 bg-amber-50/40 dark:bg-amber-950/20 border-b border-slate-200 dark:border-slate-800 text-xs text-amber-900 dark:text-amber-200 flex items-center space-x-2">
-            <BookOpen className="w-4 h-4 text-amber-500 flex-shrink-0" />
-            <span><strong>Python vs. C# postřeh:</strong> {selectedPattern.pythonComparisonNote}</span>
           </div>
         )}
 
-        {/* Live Code Editor & Runner Section */}
-        <div className="p-6 sm:p-8 space-y-4">
+        {/* Live Code Editor & Runner Section (Prominent right below Anatomy!) */}
+        <div className="p-6 sm:p-8 space-y-4 border-b border-slate-200 dark:border-slate-800">
           <div className="flex items-center justify-between">
             <h4 className="font-bold text-slate-900 dark:text-white text-base">
-              Kompletní C# kód se spustitelnou metodou Main()
+              Kompletní C# kód vzoru se spustitelnou metodou Main()
             </h4>
             <span className="text-xs text-slate-500 font-mono">
-              Klikněte na &quot;Spustit v C#&quot; pro ověření přes .NET SDK
+              Klikněte na &quot;Spustit v C#&quot; (nebo Ctrl+Enter) pro reálný překlad přes Roslyn
             </span>
           </div>
 
@@ -342,6 +350,54 @@ export const PatternCatalog: React.FC = () => {
               isRunning={isRunning || isBuilding}
               onClear={() => setRunnerResult(null)}
             />
+          </div>
+        </div>
+
+        {/* Python vs C# Note if available */}
+        {selectedPattern.pythonComparisonNote && (
+          <div className="px-6 py-3 bg-amber-50/40 dark:bg-amber-950/20 border-b border-slate-200 dark:border-slate-800 text-xs text-amber-900 dark:text-amber-200 flex items-center space-x-2">
+            <BookOpen className="w-4 h-4 text-amber-500 flex-shrink-0" />
+            <span><strong>Python vs. C# postřeh:</strong> {selectedPattern.pythonComparisonNote}</span>
+          </div>
+        )}
+
+        {/* UML Description & Architecture Participants */}
+        <div className="p-6 sm:p-8 bg-slate-50/40 dark:bg-slate-950/20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* UML Structure */}
+            <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+              <h4 className="font-bold text-slate-900 dark:text-white text-sm mb-2 flex items-center space-x-1.5">
+                <Network className="w-4 h-4 text-indigo-500" />
+                <span>UML diagram &amp; vazby tříd</span>
+              </h4>
+              <PatternUMLDiagram patternKey={selectedPattern.umlSvgKey} />
+              <div className="mt-2 p-2.5 bg-slate-50 dark:bg-slate-950 rounded-xl font-mono text-[11px] text-indigo-600 dark:text-indigo-300 border border-slate-200/80 dark:border-slate-800 leading-relaxed whitespace-pre-wrap break-words">
+                {selectedPattern.umlDescription}
+              </div>
+            </div>
+
+            {/* Architecture Participants */}
+            <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+              <h4 className="font-bold text-slate-900 dark:text-white text-sm mb-2 flex items-center space-x-1.5">
+                <Layers className="w-4 h-4 text-purple-500" />
+                <span>Účastníci v kódu (Role jednotlivých tříd)</span>
+              </h4>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
+                Rozdělení odpovědností jednotlivých tříd a rozhraní v C# implementaci:
+              </p>
+              <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+                {selectedPattern.participants.map((p, idx) => (
+                  <div key={idx} className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/70 dark:border-slate-800/70">
+                    <div className="font-mono font-bold text-indigo-600 dark:text-indigo-400 text-xs">
+                      {p.name}
+                    </div>
+                    <div className="text-slate-600 dark:text-slate-300 text-xs mt-0.5 leading-relaxed">
+                      {p.role}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
