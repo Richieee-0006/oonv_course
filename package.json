@@ -5,6 +5,8 @@
   "description": "C# & OONV Interactive Learning Platform",
   "scripts": {
     "start:server": "cd server && npm start",
-    "test:server": "cd server && npm test"
+    "test:server": "cd server && npm test",
+    "build:client": "cd client && npm run build",
+    "start:client": "cd client && npm run dev"
   }
 }
