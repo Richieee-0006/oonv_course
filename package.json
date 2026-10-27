@@ -4,9 +4,11 @@
   "private": true,
   "description": "C# & OONV Interactive Learning Platform",
   "scripts": {
+    "start": "node start.js",
+    "setup": "node start.js --setup",
     "setup:linux": "bash ./setup-linux.sh",
-    "setup:windows": "powershell -ExecutionPolicy Bypass -File ./setup-windows.ps1 -InstallOnly",
-    "start:windows": "powershell -ExecutionPolicy Bypass -File ./setup-windows.ps1",
+    "setup:windows": "node start.js --setup",
+    "start:windows": "node start.js",
     "start:server": "cd server && npm start",
     "test:server": "cd server && npm test",
     "build:client": "cd client && npm run build",
