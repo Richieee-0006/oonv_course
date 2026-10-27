@@ -173,8 +173,8 @@ export const Mode2FourPartsMemory: React.FC = () => {
         </div>
       </div>
 
-      {/* Editor & Output Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+      {/* Editor & Output Stacked Vertically */}
+      <div className="space-y-4">
         <CodeEditor
           code={code}
           onChange={handleCodeChange}
@@ -185,7 +185,7 @@ export const Mode2FourPartsMemory: React.FC = () => {
           isBuilding={isBuilding}
           diagnostics={runnerResult?.diagnostics}
           title={`4 Části: ${currentExercise.patternName}`}
-          minHeight="420px"
+          minHeight="400px"
         />
 
         <RunnerOutput

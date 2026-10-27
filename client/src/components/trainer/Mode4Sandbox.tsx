@@ -129,8 +129,8 @@ export const Mode4Sandbox: React.FC = () => {
         </ul>
       </div>
 
-      {/* Editor & Output */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+      {/* Editor & Output Stacked Vertically */}
+      <div className="space-y-4">
         <CodeEditor
           code={code}
           onChange={handleCodeChange}
@@ -141,7 +141,7 @@ export const Mode4Sandbox: React.FC = () => {
           isBuilding={isBuilding}
           diagnostics={runnerResult?.diagnostics}
           title={currentTemplate.name}
-          minHeight="520px"
+          minHeight="460px"
         />
 
         <RunnerOutput

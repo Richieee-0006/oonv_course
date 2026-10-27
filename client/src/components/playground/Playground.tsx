@@ -116,24 +116,24 @@ export const Playground: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <article className="space-y-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
-      <div className="bg-gradient-to-br from-indigo-900/30 via-slate-900/40 to-slate-900 border border-indigo-500/20 rounded-3xl p-6 sm:p-8 backdrop-blur shadow-sm">
-        <div className="flex items-center space-x-2 text-indigo-400 font-mono text-xs font-semibold uppercase tracking-wider mb-2">
+      <header className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-sm">
+        <div className="flex items-center space-x-2 text-indigo-600 dark:text-indigo-400 font-mono text-xs font-semibold uppercase tracking-wider mb-2">
           <Code2 className="w-4 h-4" />
-          <span>Volný C# Editor & Kompilátor</span>
+          <span>Volný C# Editor &amp; Kompilátor</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           Volné C# Pískoviště
-        </h2>
-        <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed">
-          Napište libovolný C# kód, vyzkoušejte nové vlastnosti jazyka nebo si připravte vlastní útržek kódu.
+        </h1>
+        <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+          Napiš libovolný C# kód, vyzkoušej si chování jazyka nebo vlastní návrhový vzor.
           Kód se kompiluje a spouští v reálném .NET SDK prostředí.
         </p>
-      </div>
+      </header>
 
       {/* Templates Row */}
-      <div className="flex flex-wrap items-center gap-2">
+      <nav aria-label="Rychlé šablony pískoviště" className="flex flex-wrap items-center gap-2">
         <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mr-2 flex items-center space-x-1">
           <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
           <span>Rychlé šablony:</span>
@@ -147,10 +147,10 @@ export const Playground: React.FC = () => {
             {t.name}
           </button>
         ))}
-      </div>
+      </nav>
 
       {/* Stdin option */}
-      <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row sm:items-center gap-3">
+      <section aria-label="Standardní vstup programu" className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row sm:items-center gap-3">
         <div className="flex items-center space-x-2 text-xs font-bold text-slate-700 dark:text-slate-300 font-mono">
           <Terminal className="w-4 h-4 text-slate-400" />
           <span>Vstup pro program (Standard Input / stdin):</span>
@@ -162,10 +162,10 @@ export const Playground: React.FC = () => {
           placeholder="Volitelný text předaný do Console.ReadLine()..."
           className="flex-1 px-3 py-1.5 text-xs font-mono rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
-      </div>
+      </section>
 
-      {/* Editor & Output */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+      {/* Editor & Output Stacked Vertically */}
+      <section aria-label="Editor kódu a výstupní konzole" className="space-y-4">
         <CodeEditor
           code={code}
           onChange={handleCodeChange}
@@ -176,7 +176,7 @@ export const Playground: React.FC = () => {
           isBuilding={isBuilding}
           diagnostics={runnerResult?.diagnostics}
           title="Playground.cs"
-          minHeight="480px"
+          minHeight="420px"
         />
 
         <RunnerOutput
@@ -184,7 +184,7 @@ export const Playground: React.FC = () => {
           isRunning={isRunning || isBuilding}
           onClear={() => setRunnerResult(null)}
         />
-      </div>
-    </div>
+      </section>
+    </article>
   );
 };

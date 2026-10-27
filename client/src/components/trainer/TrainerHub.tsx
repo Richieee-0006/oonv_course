@@ -38,59 +38,64 @@ export const TrainerHub: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      <div className="bg-gradient-to-br from-indigo-900/30 via-slate-900/40 to-slate-900 border border-indigo-500/20 rounded-3xl p-6 sm:p-8 backdrop-blur shadow-sm">
-        <div className="flex items-center space-x-2 text-indigo-400 font-mono text-xs font-semibold uppercase tracking-wider mb-2">
-          <Dumbbell className="w-4 h-4" />
-          <span>Praktický trenažér ke zkoušce</span>
-        </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-          Všechny 4 tréninkové režimy
-        </h2>
-        <p className="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-4xl leading-relaxed">
-          Od tréninku klíčových slov přes psaní 4 částí vzoru zpaměti (str. 16 z PDF) až po zkouškový kvíz a 
-          hotové šablony zápočtového projektu kombinující 3-4 návrhové vzory dohromady.
-        </p>
-      </div>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="flex flex-col lg:flex-row gap-8 items-start">
+        {/* HTML5 <aside> — Left Navigation for 4 Training Modes */}
+        <aside
+          aria-label="Výběr tréninkového režimu"
+          className="w-full lg:w-72 xl:w-80 flex-shrink-0 lg:sticky lg:top-20 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm"
+        >
+          <div className="mb-3">
+            <div className="flex items-center space-x-1.5 text-indigo-600 dark:text-indigo-400 font-mono text-[11px] font-bold uppercase tracking-wider">
+              <Dumbbell className="w-3.5 h-3.5" />
+              <span>Praktický trenažér</span>
+            </div>
+            <h2 className="font-bold text-slate-900 dark:text-white text-sm mt-0.5">
+              4 tréninkové režimy
+            </h2>
+          </div>
 
-      {/* Mode Switcher Tabs */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {modes.map((m) => {
-          const Icon = m.icon;
-          const isActive = activeMode === m.id;
-          return (
-            <button
-              key={m.id}
-              onClick={() => setActiveMode(m.id)}
-              className={`p-4 rounded-2xl border text-left flex items-start space-x-3 transition-all ${
-                isActive
-                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-600/20'
-                  : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'
-              }`}
-            >
-              <div className={`p-2 rounded-xl flex-shrink-0 ${
-                isActive ? 'bg-white/20 text-white' : 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400'
-              }`}>
-                <Icon className="w-5 h-5" />
-              </div>
-              <div>
-                <div className="font-bold text-xs sm:text-sm">{m.title}</div>
-                <div className={`text-[11px] mt-1 ${isActive ? 'text-indigo-100' : 'text-slate-500 dark:text-slate-400'}`}>
-                  {m.desc}
-                </div>
-              </div>
-            </button>
-          );
-        })}
-      </div>
+          <nav aria-label="Režimy trenažéru">
+            <ul className="space-y-2">
+              {modes.map((m) => {
+                const Icon = m.icon;
+                const isActive = activeMode === m.id;
+                return (
+                  <li key={m.id}>
+                    <button
+                      onClick={() => setActiveMode(m.id)}
+                      className={`w-full p-3 rounded-xl border text-left flex items-start space-x-3 transition-all ${
+                        isActive
+                          ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
+                          : 'bg-slate-50/70 dark:bg-slate-950/60 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                      }`}
+                    >
+                      <div className={`p-2 rounded-lg flex-shrink-0 ${
+                        isActive ? 'bg-white/20 text-white' : 'bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400'
+                      }`}>
+                        <Icon className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="font-bold text-xs">{m.title}</div>
+                        <div className={`text-[11px] mt-0.5 leading-snug ${isActive ? 'text-indigo-100' : 'text-slate-500 dark:text-slate-400'}`}>
+                          {m.desc}
+                        </div>
+                      </div>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+        </aside>
 
-      {/* Mode Content */}
-      <div className="pt-2">
-        {activeMode === 'mode1' && <Mode1FillInBlanks />}
-        {activeMode === 'mode2' && <Mode2FourPartsMemory />}
-        {activeMode === 'mode3' && <Mode3ExamQuiz />}
-        {activeMode === 'mode4' && <Mode4Sandbox />}
+        {/* HTML5 <article> — Active Mode Content */}
+        <article className="flex-1 min-w-0 w-full">
+          {activeMode === 'mode1' && <Mode1FillInBlanks />}
+          {activeMode === 'mode2' && <Mode2FourPartsMemory />}
+          {activeMode === 'mode3' && <Mode3ExamQuiz />}
+          {activeMode === 'mode4' && <Mode4Sandbox />}
+        </article>
       </div>
     </div>
   );

@@ -35,32 +35,32 @@ export const Step1UnderTheHood: React.FC = () => {
   };
 
   return (
-    <div className="space-y-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <article className="space-y-8 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Hero / Introduction */}
-      <div className="bg-gradient-to-br from-indigo-900/30 via-slate-900/40 to-slate-900 border border-indigo-500/20 rounded-3xl p-6 sm:p-8 backdrop-blur shadow-sm">
-        <div className="flex items-center space-x-2 text-indigo-400 font-mono text-xs font-semibold uppercase tracking-wider mb-2">
+      <header className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-sm">
+        <div className="flex items-center space-x-2 text-indigo-600 dark:text-indigo-400 font-mono text-xs font-semibold uppercase tracking-wider mb-2">
           <Cpu className="w-4 h-4" />
           <span>Krok 1 / Sylabus Týden 1</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-          Jak funguje C# pod kapotou & Přechod z Pythonu
-        </h2>
-        <p className="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-4xl leading-relaxed">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          Jak funguje C# pod kapotou &amp; Přechod z Pythonu
+        </h1>
+        <p className="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
           Při přechodu z dynamického Pythonu do statického C# musíme pochopit dvoufázový překladový model,
           rozdělení paměti na <strong>Stack</strong> a <strong>Heap</strong> a mentální pravidlo: 
           <em> Levá strana je nálepka na krabici pro kompilátor Roslyn, pravá strana je reálný objekt alokovaný v RAM.</em>
         </p>
-      </div>
+      </header>
 
       {/* Roslyn -> IL -> JIT Pipeline */}
-      <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
+      <section aria-labelledby="sec-roslyn" className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
         <div className="flex items-center space-x-2 mb-4">
           <span className="p-1.5 rounded-lg bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 font-bold text-xs">
             Dvoufázová kompilace
           </span>
-          <h3 className="font-bold text-slate-900 dark:text-white text-lg">
+          <h2 id="sec-roslyn" className="font-bold text-slate-900 dark:text-white text-lg">
             Roslyn Compiler ➔ CIL (IL) ➔ CLR / JIT Runtime
-          </h3>
+          </h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -97,18 +97,20 @@ export const Step1UnderTheHood: React.FC = () => {
             </p>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Interactive Memory Model Visualizer */}
-      <MemoryModelVisualizer />
+      <section aria-label="Vizualizér paměti Stack a Heap">
+        <MemoryModelVisualizer />
+      </section>
 
       {/* Python vs C# Comparison Table */}
-      <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
+      <section aria-labelledby="sec-py-cs" className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
         <div className="flex items-center space-x-2 mb-4">
           <BookOpen className="w-5 h-5 text-indigo-500" />
-          <h3 className="font-bold text-slate-900 dark:text-white text-lg">
+          <h2 id="sec-py-cs" className="font-bold text-slate-900 dark:text-white text-lg">
             Srovnávací tabulka: Přechod z Pythonu do C#
-          </h3>
+          </h2>
         </div>
 
         <div className="overflow-x-auto">
@@ -133,17 +135,17 @@ export const Step1UnderTheHood: React.FC = () => {
             </tbody>
           </table>
         </div>
-      </div>
+      </section>
 
       {/* Interactive Runnable Code Sandbox for Step 1 */}
-      <div className="space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <section aria-labelledby="sec-step1-code" className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
           <div>
-            <h3 className="font-bold text-slate-900 dark:text-white text-lg">
-              Vyzkoušejte si kód v reálném .NET SDK runneru
-            </h3>
+            <h2 id="sec-step1-code" className="font-bold text-slate-900 dark:text-white text-lg">
+              Vyzkoušej si kód v reálném .NET SDK runneru
+            </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Přepínejte mezi ukázkami paměti a třídou Uzivatel, upravujte kód a sledujte výstup kompilátoru Roslyn.
+              Přepínej mezi ukázkami paměti a třídou Uzivatel, upravuj kód a sleduj výstup v konzoli pod editorem.
             </p>
           </div>
 
@@ -156,7 +158,7 @@ export const Step1UnderTheHood: React.FC = () => {
                   : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
               }`}
             >
-              1. Stack vs Heap & String
+              1. Stack vs Heap &amp; String
             </button>
             <button
               onClick={() => handleSelectExample('uzivatelDemo')}
@@ -166,12 +168,12 @@ export const Step1UnderTheHood: React.FC = () => {
                   : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
               }`}
             >
-              2. Třída Uzivatel & Zapouzdření
+              2. Třída Uzivatel &amp; Zapouzdření
             </button>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        <div className="space-y-4">
           <CodeEditor
             code={code}
             onChange={setCode}
@@ -190,7 +192,7 @@ export const Step1UnderTheHood: React.FC = () => {
             onClear={() => setRunnerResult(null)}
           />
         </div>
-      </div>
-    </div>
+      </section>
+    </article>
   );
 };

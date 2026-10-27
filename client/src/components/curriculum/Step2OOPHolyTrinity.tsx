@@ -31,24 +31,24 @@ export const Step2OOPHolyTrinity: React.FC = () => {
   const activeModInfo = accessModifiersData.find(m => m.modifier === selectedModifier) || accessModifiersData[0];
 
   return (
-    <div className="space-y-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <article className="space-y-8 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
-      <div className="bg-gradient-to-br from-purple-900/30 via-slate-900/40 to-slate-900 border border-purple-500/20 rounded-3xl p-6 sm:p-8 backdrop-blur shadow-sm">
-        <div className="flex items-center space-x-2 text-purple-400 font-mono text-xs font-semibold uppercase tracking-wider mb-2">
+      <header className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-sm">
+        <div className="flex items-center space-x-2 text-purple-600 dark:text-purple-400 font-mono text-xs font-semibold uppercase tracking-wider mb-2">
           <Layers className="w-4 h-4" />
-          <span>Kroky 2 & 3 / Sylabus Týdny 1–5 ke zkoušce</span>
+          <span>Kroky 2 &amp; 3 / Sylabus Týdny 1–5 ke zkoušce</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-          Svatá trojice OOP & Zkoušková teorie C#
-        </h2>
-        <p className="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-4xl leading-relaxed">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          Svatá trojice OOP &amp; Zkoušková teorie C#
+        </h1>
+        <p className="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
           Klíčová látka pro zkoušku: typový systém, řízený polymorfismus (<strong>virtual/override</strong> vs <strong>new</strong>),
           VTABLE dynamická vazba, <strong>6 specifikátorů přístupu</strong>, povinné volání <code>: base(...)</code> a 2 zlatá pravidla GoF.
         </p>
-      </div>
+      </header>
 
       {/* 2 Golden Rules of GoF Banner */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <section aria-label="2 zlatá pravidla GoF" className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="p-5 rounded-2xl border border-indigo-200 dark:border-indigo-900/60 bg-gradient-to-r from-indigo-50/80 to-white dark:from-indigo-950/30 dark:to-slate-900 shadow-sm flex items-start space-x-3">
           <div className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-sm flex-shrink-0">
             1
@@ -76,17 +76,19 @@ export const Step2OOPHolyTrinity: React.FC = () => {
             </p>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Interactive UML Arrows */}
-      <UMLArrowInteractive />
+      <section aria-label="Překlad UML šipek do C#">
+        <UMLArrowInteractive />
+      </section>
 
       {/* VTABLE vs Static Binding Comparison Card */}
-      <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
-        <h3 className="font-bold text-slate-900 dark:text-white text-lg mb-4 flex items-center space-x-2">
+      <section aria-labelledby="sec-vtable" className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
+        <h2 id="sec-vtable" className="font-bold text-slate-900 dark:text-white text-lg mb-4 flex items-center space-x-2">
           <Sparkles className="w-5 h-5 text-indigo-500" />
           <span>Zkouškový přehled: Virtual vs Override vs New vs Sealed</span>
-        </h3>
+        </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
           <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex flex-col justify-between">
@@ -129,16 +131,16 @@ export const Step2OOPHolyTrinity: React.FC = () => {
             <div className="mt-3 text-[10px] text-slate-500 font-mono">public sealed override void M()</div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* 6 Access Modifiers Matrix */}
-      <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
+      <section aria-labelledby="sec-modifiers" className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
           <div>
-            <h3 className="font-bold text-slate-900 dark:text-white text-lg flex items-center space-x-2">
+            <h2 id="sec-modifiers" className="font-bold text-slate-900 dark:text-white text-lg flex items-center space-x-2">
               <ShieldCheck className="w-5 h-5 text-indigo-500" />
               <span>Matice všech 6 specifikátorů přístupu v C#</span>
-            </h3>
+            </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
               Vyberte modifikátor pro detailní zkouškový výklad.
             </p>
@@ -209,20 +211,20 @@ export const Step2OOPHolyTrinity: React.FC = () => {
             <p className="text-amber-600 dark:text-amber-400 font-semibold">{activeModInfo.examNote}</p>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Runnable Code: Zamestnanec & Programator */}
-      <div className="space-y-4">
-        <div>
-          <h3 className="font-bold text-slate-900 dark:text-white text-lg">
-            Spustitelná demonstrace: Zaměstnanec, Programátor & VTABLE
-          </h3>
+      <section aria-labelledby="sec-step2-code" className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm space-y-4">
+        <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
+          <h2 id="sec-step2-code" className="font-bold text-slate-900 dark:text-white text-lg">
+            Spustitelná demonstrace: Zaměstnanec, Programátor &amp; VTABLE
+          </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            Vyzkoušejte si chování <code>override</code> vs <code>new</code> a bezpečné přetypování pomocí <code>is</code> a <code>as</code>.
+            Vyzkoušej si chování <code>override</code> vs <code>new</code> a bezpečné přetypování pomocí <code>is</code> a <code>as</code>.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        <div className="space-y-4">
           <CodeEditor
             code={code}
             onChange={setCode}
@@ -241,7 +243,7 @@ export const Step2OOPHolyTrinity: React.FC = () => {
             onClear={() => setRunnerResult(null)}
           />
         </div>
-      </div>
-    </div>
+      </section>
+    </article>
   );
 };
