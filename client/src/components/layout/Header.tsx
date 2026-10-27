@@ -2,15 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { BackendHealth } from '../../types/runner';
 import { runnerService } from '../../services/runnerService';
 import { storageService } from '../../services/storageService';
-import { Terminal, Moon, Sun, RefreshCw, CheckCircle2 } from 'lucide-react';
+import { Terminal, Moon, Sun, RefreshCw, CheckCircle2, Search } from 'lucide-react';
 
 interface HeaderProps {
   theme: 'dark' | 'light';
   onToggleTheme: () => void;
   onResetProgress: () => void;
+  onOpenSearch?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ theme, onToggleTheme, onResetProgress }) => {
+export const Header: React.FC<HeaderProps> = ({ theme, onToggleTheme, onResetProgress, onOpenSearch }) => {
   const [health, setHealth] = useState<BackendHealth>({ status: 'checking' });
   const [completedCount, setCompletedCount] = useState<number>(0);
 
@@ -64,7 +65,22 @@ export const Header: React.FC<HeaderProps> = ({ theme, onToggleTheme, onResetPro
         </div>
 
         {/* Right side controls */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2.5">
+          {/* Quick Search Ctrl+K button */}
+          {onOpenSearch && (
+            <button
+              onClick={onOpenSearch}
+              className="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition-colors"
+              title="Rychlé vyhledávání (Ctrl+K)"
+            >
+              <Search className="w-3.5 h-3.5 text-slate-400" />
+              <span className="hidden sm:inline">Hledat...</span>
+              <kbd className="hidden md:inline-block px-1.5 py-0.5 text-[10px] font-mono bg-white dark:bg-slate-900 rounded border border-slate-300 dark:border-slate-700 text-slate-500">
+                Ctrl+K
+              </kbd>
+            </button>
+          )}
+
           {/* Progress Pill */}
           <div className="hidden md:flex items-center space-x-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-medium text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />

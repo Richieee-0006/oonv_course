@@ -4,17 +4,31 @@ import { Navbar, TabKey } from './components/layout/Navbar';
 import { Step1UnderTheHood } from './components/curriculum/Step1UnderTheHood';
 import { Step2OOPHolyTrinity } from './components/curriculum/Step2OOPHolyTrinity';
 import { PatternCatalog } from './components/patterns/PatternCatalog';
+import { ExamCheatSheet } from './components/cheatsheet/ExamCheatSheet';
 import { TrainerHub } from './components/trainer/TrainerHub';
 import { Playground } from './components/playground/Playground';
+import { CommandPalette } from './components/common/CommandPalette';
 import { storageService } from './services/storageService';
 
 export const App: React.FC = () => {
   const [theme, setTheme] = useState<'dark' | 'light'>(() => storageService.getTheme());
   const [activeTab, setActiveTab] = useState<TabKey>(() => storageService.getActiveTab('step1') as TabKey);
+  const [isPaletteOpen, setIsPaletteOpen] = useState<boolean>(false);
 
   useEffect(() => {
     storageService.setTheme(theme);
   }, [theme]);
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsPaletteOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
 
   const handleToggleTheme = () => {
     const next = theme === 'dark' ? 'light' : 'dark';
@@ -25,6 +39,13 @@ export const App: React.FC = () => {
     setActiveTab(tab);
     storageService.setActiveTab(tab);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handlePaletteSelect = (tab: string) => {
+    const validTabs: TabKey[] = ['step1', 'step2', 'patterns', 'cheatsheet', 'trainer', 'playground'];
+    if (validTabs.includes(tab as TabKey)) {
+      handleSelectTab(tab as TabKey);
+    }
   };
 
   const handleResetProgress = () => {
@@ -41,6 +62,7 @@ export const App: React.FC = () => {
         theme={theme}
         onToggleTheme={handleToggleTheme}
         onResetProgress={handleResetProgress}
+        onOpenSearch={() => setIsPaletteOpen(true)}
       />
 
       {/* Main Tab Navigation */}
@@ -54,9 +76,23 @@ export const App: React.FC = () => {
         {activeTab === 'step1' && <Step1UnderTheHood />}
         {activeTab === 'step2' && <Step2OOPHolyTrinity />}
         {activeTab === 'patterns' && <PatternCatalog />}
+        {activeTab === 'cheatsheet' && (
+          <ExamCheatSheet
+            onSelectPattern={() => handleSelectTab('patterns')}
+            onNavigateToTab={(tab) => handlePaletteSelect(tab)}
+          />
+        )}
         {activeTab === 'trainer' && <TrainerHub />}
         {activeTab === 'playground' && <Playground />}
       </main>
+
+      {/* Global Command Palette (Ctrl+K) */}
+      <CommandPalette
+        isOpen={isPaletteOpen}
+        onClose={() => setIsPaletteOpen(false)}
+        onSelect={handlePaletteSelect}
+        enableGlobalShortcuts={false}
+      />
 
       {/* Footer */}
       <footer className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-6 text-center text-xs text-slate-500 dark:text-slate-400">

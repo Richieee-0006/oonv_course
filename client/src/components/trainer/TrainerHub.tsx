@@ -3,9 +3,11 @@ import { Mode1FillInBlanks } from './Mode1FillInBlanks';
 import { Mode2FourPartsMemory } from './Mode2FourPartsMemory';
 import { Mode3ExamQuiz } from './Mode3ExamQuiz';
 import { Mode4Sandbox } from './Mode4Sandbox';
-import { Dumbbell, FileText, Brain, HelpCircle, Code2 } from 'lucide-react';
+import { Mode5DragDrop } from './Mode5DragDrop';
+import { FlashcardDeck } from './FlashcardDeck';
+import { Dumbbell, FileText, Brain, HelpCircle, Code2, Move, Layers } from 'lucide-react';
 
-export type TrainerMode = 'mode1' | 'mode2' | 'mode3' | 'mode4';
+export type TrainerMode = 'mode1' | 'mode2' | 'mode3' | 'mode4' | 'mode5' | 'flashcards';
 
 export const TrainerHub: React.FC = () => {
   const [activeMode, setActiveMode] = useState<TrainerMode>('mode1');
@@ -13,26 +15,38 @@ export const TrainerHub: React.FC = () => {
   const modes = [
     {
       id: 'mode1' as TrainerMode,
-      title: 'Režim 1: Doplňovačka',
-      desc: 'Klíčová slova (virtual, override, new, is, as...)',
+      title: '1. Doplňovačka v C# kódu',
+      desc: 'Doplň chybějící klíčová slova přímo do C# kódu a spusť v .NET',
       icon: FileText
     },
     {
-      id: 'mode2' as TrainerMode,
-      title: 'Režim 2: 4 části vzoru zpaměti',
-      desc: 'Podle str. 16 z PDF (Rozhraní, Produkt, Vzor, Main)',
-      icon: Brain
+      id: 'mode5' as TrainerMode,
+      title: '2. Drag & Drop a Spojovačky',
+      desc: 'Roztřídění vzorů do rodin GoF, Stack vs Heap, spojování C# kódu',
+      icon: Move
     },
     {
       id: 'mode3' as TrainerMode,
-      title: 'Režim 3: Zkouškový kvíz',
-      desc: '"Co vypíše tento kód?" a chytáky v RAM',
+      title: '3. Zkouškový kvíz & Simulace',
+      desc: 'Trénink, Zkouška nanečisto (10 min), Náhlá smrt a Opravna chyb',
       icon: HelpCircle
     },
     {
+      id: 'flashcards' as TrainerMode,
+      title: '4. Kartičky (Leitnerův systém)',
+      desc: 'Active Recall kartičky se 3 koši (Zopakovat / Váhal jsem / Umím)',
+      icon: Layers
+    },
+    {
+      id: 'mode2' as TrainerMode,
+      title: '5. Napiš 4 části vzoru zpaměti',
+      desc: 'Podle str. 16 z PDF (1. Rozhraní, 2. Produkt, 3. Vzor, 4. Main)',
+      icon: Brain
+    },
+    {
       id: 'mode4' as TrainerMode,
-      title: 'Režim 4: Pískoviště zápočtu',
-      desc: 'Kombinace vzorů: Platební systém & RPG Engine',
+      title: '6. Pískoviště zápočtu (3 vzory)',
+      desc: 'Hotové kombinace vzorů: Platební brána & Tahové RPG',
       icon: Code2
     }
   ];
@@ -51,7 +65,7 @@ export const TrainerHub: React.FC = () => {
               <span>Praktický trenažér</span>
             </div>
             <h2 className="font-bold text-slate-900 dark:text-white text-sm mt-0.5">
-              4 tréninkové režimy
+              6 tréninkových režimů
             </h2>
           </div>
 
@@ -92,8 +106,10 @@ export const TrainerHub: React.FC = () => {
         {/* HTML5 <article> — Active Mode Content */}
         <article className="flex-1 min-w-0 w-full">
           {activeMode === 'mode1' && <Mode1FillInBlanks />}
-          {activeMode === 'mode2' && <Mode2FourPartsMemory />}
+          {activeMode === 'mode5' && <Mode5DragDrop />}
           {activeMode === 'mode3' && <Mode3ExamQuiz />}
+          {activeMode === 'flashcards' && <FlashcardDeck />}
+          {activeMode === 'mode2' && <Mode2FourPartsMemory />}
           {activeMode === 'mode4' && <Mode4Sandbox />}
         </article>
       </div>

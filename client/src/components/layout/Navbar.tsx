@@ -1,7 +1,7 @@
 import React from 'react';
-import { Cpu, Layers, Sparkles, Dumbbell, Code2 } from 'lucide-react';
+import { Cpu, Layers, Sparkles, Dumbbell, Code2, Zap } from 'lucide-react';
 
-export type TabKey = 'step1' | 'step2' | 'patterns' | 'trainer' | 'playground';
+export type TabKey = 'step1' | 'step2' | 'patterns' | 'cheatsheet' | 'trainer' | 'playground';
 
 interface NavbarProps {
   activeTab: TabKey;
@@ -26,13 +26,18 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onSelectTab }) => {
       icon: Sparkles,
     },
     {
+      id: 'cheatsheet' as TabKey,
+      label: '4. Zkouškový tahák',
+      icon: Zap,
+    },
+    {
       id: 'trainer' as TabKey,
-      label: '4. Trénink & Kvíz',
+      label: '5. Trénink & Kvízy (6 režimů)',
       icon: Dumbbell,
     },
     {
       id: 'playground' as TabKey,
-      label: '5. C# Pískoviště',
+      label: '6. C# Pískoviště',
       icon: Code2,
     },
   ];
