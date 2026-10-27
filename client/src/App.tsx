@@ -62,10 +62,10 @@ export const App: React.FC = () => {
       <footer className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-6 text-center text-xs text-slate-500 dark:text-slate-400">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
           <div>
-            C# & OONV Interaktivní platforma • Podle sylabu OONV & Refactoring.Guru (2026)
+            C# & OONV Interaktivní platforma • Podle sylabu OONV (2026)
           </div>
           <div className="font-mono text-[11px] text-slate-400 dark:text-slate-500">
-            Roslyn .NET 9 SDK • Vite + React + TypeScript + Tailwind
+            Roslyn .NET 10 SDK • Vite + React + TypeScript + Tailwind
           </div>
         </div>
       </footer>

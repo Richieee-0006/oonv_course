@@ -17,11 +17,11 @@ export const UMLArrowInteractive: React.FC = () => {
               UML & C#
             </span>
             <h3 className="font-bold text-slate-900 dark:text-white text-lg">
-              Jak číst UML šipky z Refactoring.Guru
+              Jak číst UML šipky u návrhových vzorů (Klíč ke zkoušce)
             </h3>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Klikněte na typ vztahu pro interaktivní vizualizaci a překlad na odpovídající C# kód.
+            U zkoušky nepotřebuješ znát texty z Refactoring.Guru, ale <strong>poznat vzor z UML diagramu</strong> a přepsat jeho šipky do C#.
           </p>
         </div>
 
@@ -168,7 +168,7 @@ export const UMLArrowInteractive: React.FC = () => {
           <div className="p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-xs text-amber-900 dark:text-amber-200">
             <div className="flex items-center space-x-1.5 font-bold mb-1">
               <BookOpen className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-              <span>Refactoring.Guru Tip ke zkoušce:</span>
+              <span>Jak to poznat v diagramu u zkoušky:</span>
             </div>
             <p className="leading-relaxed">{selected.guruTip}</p>
           </div>

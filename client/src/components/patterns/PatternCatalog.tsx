@@ -3,6 +3,7 @@ import { patternsData } from '../../data/patternsData';
 import { PatternCategory } from '../../types/patterns';
 import { CodeEditor } from '../editor/CodeEditor';
 import { RunnerOutput } from '../editor/RunnerOutput';
+import { PatternUMLDiagram } from '../diagrams/PatternUMLDiagram';
 import { runnerService } from '../../services/runnerService';
 import { RunnerResult } from '../../types/runner';
 import { storageService } from '../../services/storageService';
@@ -75,10 +76,13 @@ export const PatternCatalog: React.FC = () => {
         <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           Katalog všech 16 návrhových vzorů GoF
         </h2>
-        <p className="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-4xl leading-relaxed">
-          Všechny vzory předepsané sylabem zkoušky OONV a Refactoring.Guru. Každý vzor obsahuje přesný problém, řešení,
-          UML diagram, srovnání se souvisejícími vzory a <strong>plně spustitelný C# kód s metodou Main()</strong>.
-        </p>
+          <div className="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-4xl leading-relaxed space-y-2">
+          <p>
+            U zkoušky a zápočtu <strong>nepotřebuješ znát web Refactoring.Guru zpaměti</strong> – stěžejní je
+            <strong> poznat daný návrhový vzor z UML diagramu</strong> (podle šipek <code>- - ▷</code>, <code>───▷</code>, <code>◇───&gt;</code>)
+            a umět ho přepsat do C# kódu.
+          </p>
+        </div>
       </div>
 
       {/* Filter and Search Bar */}
@@ -267,12 +271,10 @@ export const PatternCatalog: React.FC = () => {
             <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
               <h4 className="font-bold text-slate-900 dark:text-white text-sm mb-2 flex items-center space-x-1.5">
                 <Network className="w-4 h-4 text-indigo-500" />
-                <span>UML diagram &amp; struktura vzoru</span>
+                <span>UML diagram vzoru (Klíč ke zkoušce)</span>
               </h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
-                Klíčové třídy, metody a vazby podle GoF specifikace:
-              </p>
-              <div className="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl font-mono text-xs text-indigo-600 dark:text-indigo-300 border border-slate-200/80 dark:border-slate-800 leading-relaxed whitespace-pre-wrap break-words">
+              <PatternUMLDiagram patternKey={selectedPattern.umlSvgKey} />
+              <div className="mt-2 p-2.5 bg-slate-50 dark:bg-slate-950 rounded-xl font-mono text-[11px] text-indigo-600 dark:text-indigo-300 border border-slate-200/80 dark:border-slate-800 leading-relaxed whitespace-pre-wrap break-words">
                 {selectedPattern.umlDescription}
               </div>
             </div>

@@ -43,15 +43,15 @@ is_frontend_listening() {
     curl -s -f --connect-timeout 1 "$FRONTEND_URL" >/dev/null 2>&1
 }
 
-# 2. Start services in background if necessary
+# 2. Start services in background if necessary (detached via setsid)
 if ! is_backend_listening; then
     echo "[launcher] Starting backend server on port 3001..."
-    (cd "$PROJECT_DIR/server" && nohup npm start >> "$PROJECT_DIR/.server.log" 2>&1 &)
+    setsid bash -c "cd '$PROJECT_DIR/server' && exec npm start >> '$PROJECT_DIR/.server.log' 2>&1" </dev/null >/dev/null 2>&1 &
 fi
 
 if ! is_frontend_listening; then
     echo "[launcher] Starting frontend client on port 5173..."
-    (cd "$PROJECT_DIR/client" && nohup npm run dev -- --host 0.0.0.0 >> "$PROJECT_DIR/.client.log" 2>&1 &)
+    setsid bash -c "cd '$PROJECT_DIR/client' && exec npm run dev -- --host 0.0.0.0 >> '$PROJECT_DIR/.client.log' 2>&1" </dev/null >/dev/null 2>&1 &
 fi
 
 # 3. Poll until both services respond

@@ -165,5 +165,65 @@ public class Programator : Zamestnanec
       { id: 'd', text: 'Zkompiluje se, pokud je Programator ve stejné sestavě', isCorrect: false }
     ],
     explanation: 'Pokud předek definuje konstruktor s parametry, kompilátor C# již negeneruje výchozí bezparametrický konstruktor. Každý odvozený konstruktor potomka MUSÍ explicitně zavolat : base(jmeno, mzda), jinak kompilátor Roslyn odmítne kód sestavit (CS7036).'
+  },
+
+  {
+    id: 'quiz-uml-adapter-vs-proxy',
+    title: 'UML Diagram č. 7: Jak v diagramu odlišit Adaptér od Proxy?',
+    category: 'polymorphism',
+    codeSnippet: `// V UML diagramu vidíš:
+// Třída X implementuje rozhraní ITarget (- - ▷ ITarget)
+// A ZÁROVEŇ má uvnitř kompozici (◇───> StaraSluzba),
+// přičemž StaraSluzba NEIMPLEMENTUJE ITarget a má úplně jiné názvy metod.
+
+using System;
+public interface ITarget { void Proved(); }
+public class StaraSluzba { public void SpecificAction() => Console.WriteLine("StaraSluzba"); }
+public class X : ITarget
+{
+    private readonly StaraSluzba _adaptee = new StaraSluzba();
+    public void Proved() => _adaptee.SpecificAction();
+}
+public class Program { public static void Main() => new X().Proved(); }`,
+    options: [
+      { id: 'a', text: 'Jde o vzor Proxy (Zástupce), protože obaluje jiný objekt', isCorrect: false },
+      { id: 'b', text: 'Jde o vzor Objektový Adaptér (Adapter), protože převádí nekompatibilní rozhraní StaraSluzba na ITarget', isCorrect: true },
+      { id: 'c', text: 'Jde o vzor Dekorátor (Decorator), protože přidává novou metodu', isCorrect: false },
+      { id: 'd', text: 'Jde o vzor Tovární metoda (Factory Method)', isCorrect: false }
+    ],
+    explanation: 'V UML diagramu mají Adapter, Proxy i Decorator kompozici (◇───>) i implementaci rozhraní (- - ▷). Rozdíl poznáš podle zabaleného objektu: u Proxy i Decoratoru implementuje zabalený objekt STEJNÉ rozhraní jako obal (šípka ◇───> vede zpět na společné rozhraní/předka). U Adaptéru vede šipka ◇───> do cizí třídy (Adaptee), která rozhraní ITarget vůbec neimplementuje!'
+  },
+
+  {
+    id: 'quiz-uml-decorator-vs-proxy',
+    title: 'UML Diagram č. 8: Jak v diagramu poznat Dekorátor (Decorator)?',
+    category: 'polymorphism',
+    codeSnippet: `// V UML diagramu vidíš:
+// Abstraktní třída Obal implementuje IKava (- - ▷ IKava)
+// A ZÁROVEŇ drží odkaz na totéž rozhraní (# _kava : IKava ◇───> IKava).
+// Z třídy Obal dědí konkrétní přísady (───▷ Slekem, SKaramelem).
+
+using System;
+public interface IKava { int Cena(); }
+public class Espresso : IKava { public int Cena() => 45; }
+public abstract class KavaDecorator : IKava
+{
+    protected IKava _kava;
+    protected KavaDecorator(IKava k) => _kava = k;
+    public virtual int Cena() => _kava.Cena();
+}
+public class SMlekem : KavaDecorator
+{
+    public SMlekem(IKava k) : base(k) {}
+    public override int Cena() => base.Cena() + 15;
+}
+public class Program { public static void Main() => Console.WriteLine(new SMlekem(new Espresso()).Cena()); }`,
+    options: [
+      { id: 'a', text: 'Dekorátor (Decorator) – abstraktní obal implementuje IKava a zároveň skládá IKava do sebe jako slupky cibule', isCorrect: true },
+      { id: 'b', text: 'Most (Bridge) – protože spojuje dvě nezávislé hierarchie', isCorrect: false },
+      { id: 'c', text: 'Jedináček (Singleton) – protože drží statickou instanci', isCorrect: false },
+      { id: 'd', text: 'Příkaz (Command) – protože zapouzdřuje volání', isCorrect: false }
+    ],
+    explanation: 'Typický znak Dekorátoru v UML diagramu: abstraktní třída (KavaDecorator) implementuje rozhraní komponenty (IKava - - ▷) a současně má agregaci/kompozici (◇───>) mířící zpět na samotné rozhraní IKava, přičemž z ní dědí (───▷) konkrétní dekorátory.'
   }
 ];

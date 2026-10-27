@@ -1,7 +1,25 @@
 import { BackendHealth, RunnerResult } from '../types/runner';
 import { clientValidator } from './clientValidator';
 
-const API_BASE = '/api';
+const API_URLS = ['/api', 'http://localhost:3001/api', 'http://127.0.0.1:3001/api'];
+
+async function fetchBackend(endpoint: string, options: RequestInit, timeoutMs: number): Promise<Response> {
+  let lastError: unknown;
+  for (const base of API_URLS) {
+    try {
+      const res = await fetch(`${base}${endpoint}`, {
+        ...options,
+        signal: AbortSignal.timeout(timeoutMs)
+      });
+      if (res.ok || res.status === 400 || res.status === 500) {
+        return res;
+      }
+    } catch (err) {
+      lastError = err;
+    }
+  }
+  throw lastError || new Error('Backend unreachable');
+}
 
 export const runnerService = {
   /**
@@ -9,11 +27,10 @@ export const runnerService = {
    */
   async checkHealth(): Promise<BackendHealth> {
     try {
-      const res = await fetch(`${API_BASE}/health`, {
+      const res = await fetchBackend('/health', {
         method: 'GET',
-        headers: { 'Accept': 'application/json' },
-        signal: AbortSignal.timeout(3000)
-      });
+        headers: { 'Accept': 'application/json' }
+      }, 4000);
       if (!res.ok) {
         return {
           status: 'error',
@@ -39,12 +56,11 @@ export const runnerService = {
   async buildCSharp(code: string): Promise<RunnerResult> {
     const startTime = performance.now();
     try {
-      const res = await fetch(`${API_BASE}/build`, {
+      const res = await fetchBackend('/build', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code }),
-        signal: AbortSignal.timeout(20000)
-      });
+        body: JSON.stringify({ code })
+      }, 25000);
 
       const data = await res.json();
       const elapsed = Math.round(performance.now() - startTime);
@@ -83,12 +99,11 @@ export const runnerService = {
   async runCSharp(code: string, stdin?: string): Promise<RunnerResult> {
     const startTime = performance.now();
     try {
-      const res = await fetch(`${API_BASE}/run`, {
+      const res = await fetchBackend('/run', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code, stdin, timeoutMs: 15000 }),
-        signal: AbortSignal.timeout(20000)
-      });
+        body: JSON.stringify({ code, stdin, timeoutMs: 15000 })
+      }, 25000);
 
       const data = await res.json();
       const elapsed = Math.round(performance.now() - startTime);
