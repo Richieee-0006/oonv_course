@@ -46,12 +46,12 @@ is_frontend_listening() {
 # 2. Start services in background if necessary
 if ! is_backend_listening; then
     echo "[launcher] Starting backend server on port 3001..."
-    nohup npm --prefix "$PROJECT_DIR/server" start >> "$PROJECT_DIR/.server.log" 2>&1 &
+    (cd "$PROJECT_DIR/server" && nohup npm start >> "$PROJECT_DIR/.server.log" 2>&1 &)
 fi
 
 if ! is_frontend_listening; then
     echo "[launcher] Starting frontend client on port 5173..."
-    nohup npm --prefix "$PROJECT_DIR/client" run dev -- --host 0.0.0.0 >> "$PROJECT_DIR/.client.log" 2>&1 &
+    (cd "$PROJECT_DIR/client" && nohup npm run dev -- --host 0.0.0.0 >> "$PROJECT_DIR/.client.log" 2>&1 &)
 fi
 
 # 3. Poll until both services respond
