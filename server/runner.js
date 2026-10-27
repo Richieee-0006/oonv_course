@@ -2,9 +2,18 @@ const fs = require('fs');
 const path = require('path');
 const { spawn, execFile } = require('child_process');
 
-const DOTNET_BIN = process.env.DOTNET_PATH || (fs.existsSync('/usr/bin/dotnet') ? '/usr/bin/dotnet' : 'dotnet');
+const IS_WIN = process.platform === 'win32';
+const DOTNET_BIN = process.env.DOTNET_PATH || (
+  !IS_WIN && fs.existsSync('/usr/bin/dotnet')
+    ? '/usr/bin/dotnet'
+    : IS_WIN && fs.existsSync('C:\\Program Files\\dotnet\\dotnet.exe')
+    ? 'C:\\Program Files\\dotnet\\dotnet.exe'
+    : 'dotnet'
+);
 const SANDBOX_DIR = path.resolve(__dirname, 'dotnet-sandbox');
+const CSPROJ_PATH = path.join(SANDBOX_DIR, 'Sandbox.csproj');
 const PROGRAM_PATH = path.join(SANDBOX_DIR, 'Program.cs');
+let sandboxRestored = false;
 
 // Async FIFO queue to ensure only one build/run operates in the sandbox directory at a time
 class AsyncQueue {
@@ -100,10 +109,16 @@ function getSandboxDllPath() {
 }
 
 /**
- * Kill process group safely
+ * Kill process group safely on both Linux/macOS and Windows
  */
 function killProcessGroup(pid) {
   if (!pid) return;
+  if (IS_WIN) {
+    try {
+      execFile('taskkill', ['/PID', String(pid), '/T', '/F'], () => {});
+    } catch (e) {}
+    return;
+  }
   try {
     process.kill(-pid, 'SIGKILL');
   } catch (err) {
@@ -114,9 +129,38 @@ function killProcessGroup(pid) {
 }
 
 /**
- * Compile C# code using dotnet build --no-restore
+ * Ensure Sandbox.csproj targets the installed .NET major version and is restored
  */
-function compileCodeInternal(code) {
+function ensureSandboxReady() {
+  if (sandboxRestored && fs.existsSync(path.join(SANDBOX_DIR, 'obj', 'project.assets.json'))) {
+    return Promise.resolve();
+  }
+  return new Promise((resolve) => {
+    getDotnetVersion()
+      .then((ver) => {
+        const major = parseInt(String(ver).split('.')[0], 10);
+        if (major >= 6 && fs.existsSync(CSPROJ_PATH)) {
+          const tfm = `net${major}.0`;
+          const csproj = fs.readFileSync(CSPROJ_PATH, 'utf8');
+          if (!csproj.includes(`<TargetFramework>${tfm}</TargetFramework>`)) {
+            const updated = csproj.replace(/<TargetFramework>net\d+\.\d+<\/TargetFramework>/, `<TargetFramework>${tfm}</TargetFramework>`);
+            fs.writeFileSync(CSPROJ_PATH, updated, 'utf8');
+          }
+        }
+        execFile(DOTNET_BIN, ['restore', '-v', 'quiet', '--nologo'], { cwd: SANDBOX_DIR }, () => {
+          sandboxRestored = true;
+          resolve();
+        });
+      })
+      .catch(() => resolve());
+  });
+}
+
+/**
+ * Compile C# code using dotnet build
+ */
+async function compileCodeInternal(code) {
+  await ensureSandboxReady();
   return new Promise((resolve) => {
     try {
       fs.writeFileSync(PROGRAM_PATH, code, 'utf8');
@@ -130,9 +174,14 @@ function compileCodeInternal(code) {
     }
 
     const start = Date.now();
+    const hasAssets = fs.existsSync(path.join(SANDBOX_DIR, 'obj', 'project.assets.json'));
+    const buildArgs = hasAssets
+      ? ['build', '--no-restore', '-v', 'quiet', '--nologo']
+      : ['build', '-v', 'quiet', '--nologo'];
+
     execFile(
       DOTNET_BIN,
-      ['build', '--no-restore', '-v', 'quiet', '--nologo'],
+      buildArgs,
       { cwd: SANDBOX_DIR, maxBuffer: 10 * 1024 * 1024 },
       (error, stdout, stderr) => {
         const buildDuration = Date.now() - start;
@@ -181,7 +230,8 @@ function executeBinary({ dllPath, timeoutMs = 8000, stdin = '' }) {
 
     const child = spawn(DOTNET_BIN, [dllPath], {
       cwd: SANDBOX_DIR,
-      detached: true,
+      detached: !IS_WIN,
+      windowsHide: true,
       stdio: ['pipe', 'pipe', 'pipe']
     });
 
