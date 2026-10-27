@@ -10,6 +10,8 @@ out/
 
 # .NET / C#
 bin/
+!/bin/
+!/bin/**
 obj/
 *.user
 *.suo

@@ -7,6 +7,9 @@
     "start:server": "cd server && npm start",
     "test:server": "cd server && npm test",
     "build:client": "cd client && npm run build",
-    "start:client": "cd client && npm run dev"
+    "start:client": "cd client && npm run dev",
+    "launch": "./bin/launch-app.sh",
+    "launch:chromium": "./bin/launch-app.sh --browser=chromium",
+    "launch:librewolf": "./bin/launch-app.sh --browser=librewolf"
   }
 }
