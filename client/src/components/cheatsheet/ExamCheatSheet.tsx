@@ -5,19 +5,13 @@ import {
   UML_ARROWS_DATA,
   PATTERNS_QUICK_SUMMARY,
   EXAM_TRAPS_DATA,
-  ScopeKey,
-  AccessModifierInfo,
-  UmlArrowRelation,
-  PatternQuickSummary,
-  ExamTrapItem
+  ScopeKey
 } from '../../data/cheatsheetData';
 import {
   Shield,
   Layers,
   Sparkles,
   AlertTriangle,
-  CheckCircle2,
-  XCircle,
   Search,
   Code2,
   Copy,
@@ -25,10 +19,7 @@ import {
   ChevronDown,
   ChevronUp,
   Info,
-  BookOpen,
-  ArrowRight,
-  ExternalLink,
-  HelpCircle
+  ExternalLink
 } from 'lucide-react';
 
 export type CheatSheetSection = 'modifiers' | 'uml' | 'patterns' | 'traps';
