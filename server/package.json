@@ -1,0 +1,15 @@
+{
+  "name": "csharp-oonv-kurz-server",
+  "version": "1.0.0",
+  "description": ".NET runner service for C# & OONV Interactive Learning Platform",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}
