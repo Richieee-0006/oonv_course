@@ -28,8 +28,7 @@ import {
   BookOpen,
   ArrowRight,
   ExternalLink,
-  HelpCircle,
-  Filter
+  HelpCircle
 } from 'lucide-react';
 
 export type CheatSheetSection = 'modifiers' | 'uml' | 'patterns' | 'traps';
@@ -42,8 +41,7 @@ interface ExamCheatSheetProps {
 
 export const ExamCheatSheet: React.FC<ExamCheatSheetProps> = ({
   initialSection = 'modifiers',
-  onSelectPattern,
-  onNavigateToTab
+  onSelectPattern
 }) => {
   const [activeSection, setActiveSection] = useState<CheatSheetSection>(initialSection);
 

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { quizQuestions } from '../../data/quizData';
-import { QuizQuestion, QuizOption } from '../../types/trainer';
+import { QuizQuestion } from '../../types/trainer';
+
+type QuizOption = QuizQuestion['options'][number];
 import { RunnerOutput } from '../editor/RunnerOutput';
 import { runnerService } from '../../services/runnerService';
 import { RunnerResult } from '../../types/runner';

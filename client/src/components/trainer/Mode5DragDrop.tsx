@@ -8,7 +8,6 @@ import { storageService } from '../../services/storageService';
 import {
   CheckCircle2,
   XCircle,
-  RotateCcw,
   GripVertical,
   Link2,
   Shuffle,

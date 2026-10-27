@@ -1,17 +1,8 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
   Search,
-  Sparkles,
-  Layers,
-  Shield,
-  Dumbbell,
-  Code2,
-  Cpu,
-  ArrowRight,
   X,
-  CornerDownLeft,
-  BookOpen,
-  AlertTriangle
+  CornerDownLeft
 } from 'lucide-react';
 
 export interface CommandItem {

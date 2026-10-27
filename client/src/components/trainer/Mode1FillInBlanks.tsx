@@ -4,7 +4,7 @@ import { RunnerOutput } from '../editor/RunnerOutput';
 import { runnerService } from '../../services/runnerService';
 import { RunnerResult } from '../../types/runner';
 import { storageService } from '../../services/storageService';
-import { CheckCircle2, XCircle, RotateCcw, Play, HelpCircle, Check, X, ShieldAlert } from 'lucide-react';
+import { CheckCircle2, XCircle, RotateCcw, Play, HelpCircle, Check, X } from 'lucide-react';
 
 // Levenshtein distance <= 1: single substitution, insertion or deletion
 function isLevenshtein1(a: string, b: string): boolean {
@@ -156,7 +156,7 @@ export const Mode1FillInBlanks: React.FC = () => {
     for (const b of currentExercise.blanks) {
       const rawVal = userInputs[b.id];
       const val = (rawVal !== undefined && rawVal.trim() !== '') ? rawVal.trim() : '/* CHYBĚJÍCÍ KLÍČOVÉ SLOVO */';
-      code = code.replaceAll(`{{${b.id}}}`, val);
+      code = code.split(`{{${b.id}}}`).join(val);
     }
     return code;
   };
